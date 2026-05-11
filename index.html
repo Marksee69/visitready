@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>VisitReady — App Prototype</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f0f4f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding: 20px 0;
+  }
+
+  .demo-label {
+    font-size: 12px;
+    color: #888;
+    text-align: center;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .phone {
+    width: 340px;
+    background: #e2e8f0;
+    border-radius: 44px;
+    padding: 14px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.4);
+    border: 1px solid #cbd5e1;
+  }
+
+  .phone-inner {
+    background: white;
+    border-radius: 32px;
+    overflow: hidden;
+    min-height: 620px;
+    position: relative;
+  }
+
+  .screen {
+    display: none;
+    flex-direction: column;
+    min-height: 620px;
+    background: white;
+  }
+
+  .screen.active { display: flex; }
+
+  .status-bar {
+    padding: 14px 20px 6px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+
+  .header {
+    padding: 6px 20px 16px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .header-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #185FA5;
+    letter-spacing: -0.5px;
+  }
+
+  .header-sub {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+
+  .back-btn {
+    background: none;
+    border: none;
+    color: #185FA5;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .content {
+    padding: 16px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .reminder-badge {
+    background: #E6F1FB;
+    color: #185FA5;
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 18px;
+    align-self: flex-start;
+  }
+
+  .btn-primary {
+    background: #185FA5;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .btn-primary.dark { background: #0C447C; }
+
+  .btn-secondary {
+    background: #f8fafc;
+    color: #1e293b;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .btn-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .btn-secondary .btn-icon {
+    background: #E6F1FB;
+    color: #185FA5;
+  }
+
+  .btn-sub {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.75;
+    margin-top: 1px;
+  }
+
+  .btn-secondary .btn-sub { color: #94a3b8; }
+
+  .card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  .card-label {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 6px;
+  }
+
+  textarea {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #1e293b;
+    background: #f8fafc;
+    resize: none;
+    height: 130px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+    outline: none;
+  }
+
+  textarea:focus { border-color: #185FA5; background: white; }
+
+  .privacy-note {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .submit-btn {
+    background: #185FA5;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+    margin-top: auto;
+  }
+
+  .record-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 24px;
+    flex: 1;
+  }
+
+  .record-btn {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #E6F1FB;
+    border: 2px solid #185FA5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-size: 30px;
+    color: #185FA5;
+    transition: all 0.2s;
+  }
+
+  .record-btn.recording {
+    background: #FCEBEB;
+    border-color: #E24B4A;
+    color: #E24B4A;
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+
+  .record-label {
+    text-align: center;
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .transcript-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 14px;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .photo-slot {
+    aspect-ratio: 1;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    background: #f8fafc;
+    color: #94a3b8;
+    transition: all 0.2s;
+  }
+
+  .photo-slot.added {
+    background: #E6F1FB;
+    border: 2px solid #185FA5;
+    color: #185FA5;
+  }
+
+  .success-circle {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: #EAF3DE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 28px auto 16px;
+    font-size: 36px;
+    color: #3B6D11;
+  }
+
+  .success-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+  }
+
+  .success-sub {
+    text-align: center;
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.6;
+    padding: 0 16px;
+    margin-bottom: 20px;
+  }
+
+  .success-card {
+    background: #EAF3DE;
+    border: 1px solid #C0DD97;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #3B6D11;
+    line-height: 1.5;
+  }
+
+  .doctor-header {
+    background: #E6F1FB;
+    padding: 14px 20px 16px;
+    border-bottom: 1px solid #B5D4F4;
+  }
+
+  .doctor-tag {
+    font-size: 11px;
+    color: #185FA5;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 4px;
+  }
+
+  .summary-section { margin-bottom: 14px; }
+
+  .summary-tag {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #185FA5;
+    margin-bottom: 5px;
+  }
+
+  .summary-text {
+    font-size: 14px;
+    color: #1e293b;
+    line-height: 1.6;
+  }
+
+  .divider {
+    height: 1px;
+    background: #f1f5f9;
+    margin: 12px 0;
+  }
+
+  .notch {
+    width: 90px;
+    height: 6px;
+    background: #94a3b8;
+    border-radius: 3px;
+    margin: 0 auto 10px;
+    opacity: 0.4;
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-label">VisitReady — Interactive Prototype</div>
+
+<div class="phone">
+  <div class="notch"></div>
+  <div class="phone-inner">
+
+    <!-- HOME -->
+    <div class="screen active" id="screen-home">
+      <div class="status-bar"><span>9:41 AM</span><span>●●● 100%</span></div>
+      <div class="header">
+        <div class="header-title">VisitReady</div>
+        <div class="header-sub">Hello, Mark 👋</div>
+      </div>
+      <div class="content">
+        <div class="reminder-badge">
+          <i class="ti ti-calendar"></i>
+          Appointment in 3 days — Dr. Chen
+        </div>
+        <button class="btn-primary" onclick="go('screen-text')">
+          <div class="btn-icon"><i class="ti ti-edit"></i></div>
+          <div>
+            <div>Add notes</div>
+            <div class="btn-sub">Type what's on your mind</div>
+          </div>
+        </button>
+        <button class="btn-primary dark" onclick="go('screen-voice')">
+          <div class="btn-icon"><i class="ti ti-microphone"></i></div>
+          <div>
+            <div>Record voice note</div>
+            <div class="btn-sub">Speak naturally, we'll transcribe</div>
+          </div>
+        </button>
+        <button class="btn-secondary" onclick="go('screen-photo')">
+          <div class="btn-icon"><i class="ti ti-camera"></i></div>
+          <div>
+            <div>Add photos</div>
+            <div class="btn-sub">Skin, medication, anything visual</div>
+          </div>
+        </button>
+        <div class="card" style="margin-top:8px">
+          <div class="card-label">Last submission</div>
+          <div style="font-size:14px;color:#64748b">March 15 · Sent to Dr. Chen ✓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEXT NOTES -->
+    <div class="screen" id="screen-text">
+      <div class="status-bar"><span>9:42 AM</span><span>●●● 100%</span></div>
+      <div class="header">
+        <button class="back-btn" onclick="go('screen-home')"><i class="ti ti-arrow-left"></i> Back</button>
+        <div class="header-title">Your notes</div>
+        <div class="header-sub">Private · Goes only to Dr. Chen</div>
+      </div>
+      <div class="content">
+        <textarea>I've been having headaches almost every morning for the past two weeks. Also wanted to mention I started taking a new supplement (magnesium 400mg) about a month ago. There's also something embarrassing I've been putting off saying out loud...</textarea>
+        <div class="privacy-note">
+          <i class="ti ti-lock" style="color:#185FA5;font-size:14px"></i>
+          Encrypted and seen only by your doctor
+        </div>
+        <button class="submit-btn" onclick="go('screen-confirm')">Continue →</button>
+      </div>
+    </div>
+
+    <!-- VOICE -->
+    <div class="screen" id="screen-voice">
+      <div class="status-bar"><span>9:43 AM</span><span>●●● 100%</span></div>
+      <div class="header">
+        <button class="back-btn" onclick="go('screen-home')"><i class="ti ti-arrow-left"></i> Back</button>
+        <div class="header-title">Voice note</div>
+        <div class="header-sub">Speak naturally — we'll transcribe</div>
+      </div>
+      <div class="content">
+        <div class="record-area">
+          <div class="record-btn" id="rec-btn" onclick="toggleRecord()">
+            <i class="ti ti-microphone" id="rec-icon"></i>
+          </div>
+          <div class="record-label" id="rec-label">Tap to start recording</div>
+          <div class="transcript-card">
+            <div class="card-label">Transcription</div>
+            <div style="font-size:14px;color:#64748b;line-height:1.5" id="transcript">Your words will appear here as you speak...</div>
+          </div>
+        </div>
+        <button class="submit-btn" onclick="go('screen-confirm')">Use this recording →</button>
+      </div>
+    </div>
+
+    <!-- PHOTOS -->
+    <div class="screen" id="screen-photo">
+      <div class="status-bar"><span>9:44 AM</span><span>●●● 100%</span></div>
+      <div class="header">
+        <button class="back-btn" onclick="go('screen-home')"><i class="ti ti-arrow-left"></i> Back</button>
+        <div class="header-title">Add photos</div>
+        <div class="header-sub">Skin, rashes, medications, anything visual</div>
+      </div>
+      <div class="content">
+        <div class="photo-grid">
+          <div class="photo-slot added" id="slot1"><i class="ti ti-check"></i></div>
+          <div class="photo-slot" id="slot2" onclick="addPhoto('slot2')"><i class="ti ti-plus"></i></div>
+          <div class="photo-slot" id="slot3" onclick="addPhoto('slot3')"><i class="ti ti-plus"></i></div>
+          <div class="photo-slot" id="slot4" onclick="addPhoto('slot4')"><i class="ti ti-plus"></i></div>
+          <div class="photo-slot" id="slot5" onclick="addPhoto('slot5')"><i class="ti ti-plus"></i></div>
+          <div class="photo-slot" id="slot6" onclick="addPhoto('slot6')"><i class="ti ti-plus"></i></div>
+        </div>
+        <div style="font-size:13px;color:#64748b;margin-bottom:20px;line-height:1.6">
+          Photos are end-to-end encrypted and sent directly to Dr. Chen. Never stored on our servers.
+        </div>
+        <button class="submit-btn" onclick="go('screen-confirm')">Continue →</button>
+      </div>
+    </div>
+
+    <!-- CONFIRM -->
+    <div class="screen" id="screen-confirm">
+      <div class="status-bar"><span>9:45 AM</span><span>●●● 100%</span></div>
+      <div class="header">
+        <button class="back-btn" onclick="go('screen-home')"><i class="ti ti-arrow-left"></i> Back</button>
+        <div class="header-title">Ready to send</div>
+        <div class="header-sub">Review before sending to Dr. Chen</div>
+      </div>
+      <div class="content">
+        <div class="card">
+          <div class="card-label">Sending to</div>
+          <div style="font-size:16px;font-weight:600;color:#1e293b">Dr. Sarah Chen</div>
+          <div style="font-size:13px;color:#64748b;margin-top:2px">Family Medicine · Appointment May 22</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Your submission includes</div>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#1e293b">
+              <i class="ti ti-edit" style="color:#185FA5;font-size:18px"></i> Written notes
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#1e293b">
+              <i class="ti ti-photo" style="color:#185FA5;font-size:18px"></i> 1 photo
+            </div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:#94a3b8;text-align:center;line-height:1.6;margin-bottom:20px">
+          Only Dr. Chen will see this. It will be formatted into a summary for her to review before your visit.
+        </div>
+        <button class="submit-btn" onclick="go('screen-success')">Send to Dr. Chen →</button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="screen" id="screen-success">
+      <div class="status-bar"><span>9:45 AM</span><span>●●● 100%</span></div>
+      <div class="content" style="align-items:center">
+        <div class="success-circle"><i class="ti ti-check" style="font-size:36px"></i></div>
+        <div class="success-title">Sent to Dr. Chen</div>
+        <div class="success-sub">Your notes have been securely delivered. She'll review them before your appointment on May 22.</div>
+        <div class="success-card" style="width:100%">
+          <strong>You're all set.</strong> Your doctor will be informed before you walk in. Nothing left unsaid.
+        </div>
+        <button class="btn-secondary" style="justify-content:center" onclick="go('screen-doctor')">
+          <i class="ti ti-stethoscope" style="color:#185FA5"></i> See doctor's view
+        </button>
+        <button class="btn-secondary" style="justify-content:center" onclick="go('screen-home')">
+          <i class="ti ti-home" style="color:#185FA5"></i> Back to home
+        </button>
+      </div>
+    </div>
+
+    <!-- DOCTOR VIEW -->
+    <div class="screen" id="screen-doctor">
+      <div class="status-bar"><span>9:46 AM</span><span>●●● 100%</span></div>
+      <div class="doctor-header">
+        <div class="doctor-tag">Doctor view — Pre-visit summary</div>
+        <div style="font-size:20px;font-weight:700;color:#0C447C;letter-spacing:-0.5px">Mark Seebauer</div>
+        <div style="font-size:13px;color:#185FA5;margin-top:2px">Appointment today · Submitted 2 hrs ago</div>
+      </div>
+      <div class="content" style="padding-top:14px">
+        <div class="summary-section">
+          <div class="summary-tag">Chief concerns</div>
+          <div class="summary-text">Daily morning headaches for 2 weeks. Patient also reports a personal symptom they felt unable to discuss in person.</div>
+        </div>
+        <div class="divider"></div>
+        <div class="summary-section">
+          <div class="summary-tag">Medications / supplements</div>
+          <div class="summary-text">Recently started magnesium 400mg (~1 month ago). Check for interactions.</div>
+        </div>
+        <div class="divider"></div>
+        <div class="summary-section">
+          <div class="summary-tag">Photos submitted</div>
+          <div style="background:#E6F1FB;border-radius:10px;padding:10px 12px;font-size:13px;color:#185FA5;font-weight:500">
+            <i class="ti ti-photo"></i> 1 photo attached · tap to view
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="summary-section">
+          <div class="summary-tag">Patient's own words</div>
+          <div class="summary-text" style="font-style:italic;color:#64748b">"There's also something embarrassing I've been putting off saying out loud..."</div>
+        </div>
+        <button class="back-btn" style="margin-top:12px" onclick="go('screen-home')">
+          <i class="ti ti-arrow-left"></i> Back to patient view
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:16px;font-size:12px;color:#94a3b8">
+  VisitReady · Prototype v1 · Tap through the screens
+</div>
+
+<script>
+function go(id) {
+  document.querySelectorAll('.screen').forEach(function(s) {
+    s.classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+}
+
+var recording = false;
+function toggleRecord() {
+  recording = !recording;
+  var btn = document.getElementById('rec-btn');
+  var icon = document.getElementById('rec-icon');
+  var label = document.getElementById('rec-label');
+  var transcript = document.getElementById('transcript');
+  if (recording) {
+    btn.classList.add('recording');
+    icon.className = 'ti ti-player-stop';
+    label.textContent = 'Recording... tap to stop';
+    setTimeout(function() {
+      transcript.textContent = 'I have been having some pain in my lower back for about three weeks now, especially in the mornings. Also wanted to mention I have been feeling more anxious than usual lately...';
+      transcript.style.color = '#1e293b';
+    }, 1500);
+  } else {
+    btn.classList.remove('recording');
+    icon.className = 'ti ti-microphone';
+    label.textContent = 'Recording complete ✓';
+  }
+}
+
+function addPhoto(id) {
+  var slot = document.getElementById(id);
+  slot.classList.add('added');
+  slot.innerHTML = '<i class="ti ti-check"></i>';
+}
+</script>
+</body>
+</html>
