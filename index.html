@@ -113,8 +113,37 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
     align-self: flex-start;
+  }
+
+  .emergency-banner {
+    background: #FFF3CD;
+    border: 1px solid #FBBF24;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: #92400E;
+    font-weight: 500;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.5;
+  }
+
+  .window-note {
+    background: #F0FDF4;
+    border: 1px solid #86EFAC;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: #166534;
+    font-weight: 500;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   .btn-primary {
@@ -421,9 +450,17 @@
         <div class="header-sub">Hello, Mark 👋</div>
       </div>
       <div class="content">
+        <div class="emergency-banner">
+          <i class="ti ti-alert-triangle" style="font-size:14px;flex-shrink:0;margin-top:1px"></i>
+          <span>For medical emergencies, call <strong>911</strong> or go to your nearest emergency room. This app is not for emergencies.</span>
+        </div>
         <div class="reminder-badge">
           <i class="ti ti-calendar"></i>
           Appointment in 3 days — Dr. Labell
+        </div>
+        <div class="window-note">
+          <i class="ti ti-clock" style="font-size:14px;flex-shrink:0"></i>
+          <span>Upload window is open — submissions accepted up to 3 days before your visit</span>
         </div>
         <button class="btn-primary" onclick="go('screen-text')">
           <div class="btn-icon"><i class="ti ti-edit"></i></div>
@@ -544,7 +581,7 @@
           </div>
         </div>
         <div style="font-size:13px;color:#94a3b8;text-align:center;line-height:1.6;margin-bottom:20px">
-          Only Dr. Labell will see this. It will be formatted into a summary for her to review before your visit.
+          Only Dr. Labell will see this. It will be formatted into a summary for her to review before your visit. One submission per visit.
         </div>
         <button class="submit-btn" onclick="go('screen-success')">Send to Dr. Labell →</button>
       </div>
